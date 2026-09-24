@@ -1,0 +1,28 @@
+@'
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+
+models/*
+!models/.gitkeep
+
+.env
+
+.DS_Store
+Thumbs.db
+
+.pytest_cache/
+'@ | Set-Content -Path .gitignore -Encoding utf8
