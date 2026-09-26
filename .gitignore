@@ -1,4 +1,3 @@
-@'
 # Python
 __pycache__/
 *.pyc
@@ -9,12 +8,10 @@ venv/
 # Jupyter
 .ipynb_checkpoints/
 
-
 data/raw/*
 data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
-
 
 models/*
 !models/.gitkeep
@@ -25,4 +22,3 @@ models/*
 Thumbs.db
 
 .pytest_cache/
-'@ | Set-Content -Path .gitignore -Encoding utf8
