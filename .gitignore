@@ -12,6 +12,9 @@ data/raw/*
 data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+# Tiny, and they are the evidence the split is clean -- keep them tracked.
+!data/processed/split_report.json
+!data/processed/class_weights.json
 
 models/*
 !models/.gitkeep

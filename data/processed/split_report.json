@@ -1,0 +1,43 @@
+{
+  "dataset": "benjis/bigvul",
+  "grouped_on": "commit_id",
+  "seed": 42,
+  "n_folds": 10,
+  "total_rows_after_cleaning": 163636,
+  "distinct_groups": 3991,
+  "splits": {
+    "train": {
+      "rows": 130910,
+      "share": 0.8,
+      "vulnerable": 6962,
+      "vulnerable_rate": 0.0532,
+      "groups": 3208
+    },
+    "val": {
+      "rows": 16363,
+      "share": 0.1,
+      "vulnerable": 871,
+      "vulnerable_rate": 0.0532,
+      "groups": 389
+    },
+    "test": {
+      "rows": 16363,
+      "share": 0.1,
+      "vulnerable": 870,
+      "vulnerable_rate": 0.0532,
+      "groups": 394
+    }
+  },
+  "leakage_checks": {
+    "commit_id_overlap_train_test": 0,
+    "code_overlap_train_test": 0,
+    "commit_id_overlap_train_val": 0,
+    "code_overlap_train_val": 0,
+    "commit_id_overlap_val_test": 0,
+    "code_overlap_val_test": 0
+  },
+  "class_weights": {
+    "0": 0.5280843579565624,
+    "1": 9.401752370008618
+  }
+}
