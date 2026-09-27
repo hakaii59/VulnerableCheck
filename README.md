@@ -3,7 +3,7 @@
 Detecting vulnerabilities in C/C++ functions. Built from scratch as a learning
 project, one phase at a time.
 
-**Status:** Phase 1 of 9 — exploratory analysis and a leakage audit of Big-Vul.
+**Status:** Phase 3 of 9 — the data pipeline and the regex layer are in, with 91 tests.
 
 ## Why the published Big-Vul split is discarded
 
@@ -29,6 +29,36 @@ commit is torn in half.
 
 See [`notebooks/analysis_data_leakage.ipynb`](notebooks/analysis_data_leakage.ipynb).
 
+## The rebuilt split
+
+`python scripts/build_dataset.py` turns 217,007 raw rows into 163,636 after
+whitespace-normalized deduplication, then splits them on `commit_id`:
+
+| | rows | share | vulnerable | commits |
+|---|---|---|---|---|
+| train | 130,910 | 80.0% | 6,962 (5.32%) | 3,208 |
+| val | 16,363 | 10.0% | 871 (5.32%) | 389 |
+| test | 16,363 | 10.0% | 870 (5.32%) | 394 |
+
+`verify()` asserts six overlap checks and raises rather than warns, and it runs
+before anything is written, so a leak leaves no usable parquet behind.
+
+## Layer 1: regex rules
+
+Thirteen rules, each measured on train with `scripts/mine_rules.py`, which
+reports lift — the vulnerable rate among the functions a rule flags, over the
+5.32% base rate. All eleven that fire sit between 2.0x and 5.5x. Together they
+flag 6,113 of 130,910 functions at precision 0.120 and recall 0.105.
+
+Three candidates measured well and were rejected anyway: `sizeof(*p)` (lift
+2.35, but that is the recommended idiom and CWE-467 is `sizeof(ptr)`),
+`goto err` (lift 1.83, a proxy for complex error handling rather than a defect),
+and adding `syslog` to the format-string rule — which lowered lift, since its
+first argument is a priority constant. Two rules that fire on nothing are kept,
+because `gets()` and `mktemp()` have no safe use and cost no false positives.
+
+Layer 1 alone misses 89.5% of vulnerabilities. That is the case for Layer 3.
+
 ## Layout
 
 | Path | Contents |
@@ -53,10 +83,10 @@ pip install -r requirements.txt
 
 | Phase | Deliverable |
 |---|---|
-| 0 | environment, repository skeleton |
-| 1 | EDA and the leakage audit |
-| 2 | leakage-free train/val/test split, with tests |
-| 3 | Layer 1 — regex rules chosen by measured lift |
+| 0 | environment, repository skeleton — done |
+| 1 | EDA and the leakage audit — done |
+| 2 | leakage-free train/val/test split, with tests — done |
+| 3 | Layer 1 — regex rules chosen by measured lift — done |
 | 4 | Layer 2 — Tree-sitter AST validation |
 | 5 | Layer 3 — fine-tuned GraphCodeBERT |
 | 6 | verdict logic combining the three layers |
